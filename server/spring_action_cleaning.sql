@@ -4,6 +4,25 @@ drop table if exists branches;
 drop table if exists workers;
 drop table if exists customers;
 
+CREATE TABLE languages (
+  id              SERIAL PRIMARY KEY,
+  name            VARCHAR(20) NOT NULL,
+  your_jobs       VARCHAR(40) NOT NULL,
+  from            VARCHAR(10) NOT NULL,
+  to              VARCHAR(10) NOT NULL,
+  address         VARCHAR(20) NOT NULL,
+  date            VARCHAR(10) NOT NULL,
+  time            VARCHAR(10) NOT NULL,
+  contact         VARCHAR(10) NOT NULL,
+  plan_duration   VARCHAR(20) NOT NULL,
+  job_details     VARCHAR(20) NOT NULL,
+  start_time_expl VARCHAR(40) NOT NULL,
+  end_time_expl   VARCHAR(40) NOT NULL,
+  details         VARCHAR(15) NOT NULL,
+  submit          VARCHAR(15) NOT NULL,
+  back            VARCHAR(15) NOT NULL
+);
+
 CREATE TABLE workers (
   id                    SERIAL PRIMARY KEY,
   name                  VARCHAR(100) NOT NULL,
@@ -11,7 +30,8 @@ CREATE TABLE workers (
   email                 VARCHAR(60) NOT NULL UNIQUE,
   phone_number          VARCHAR(50) NOT NULL,
   whatsapp              VARCHAR(50) NOT NULL,
-  permanent_contract    BOOLEAN NOT NULL
+  permanent_contract    BOOLEAN NOT NULL,
+  language              INT REFERENCES languages(id)
 );
 
 CREATE TABLE customers (
@@ -20,6 +40,8 @@ CREATE TABLE customers (
   email           VARCHAR(60) NOT NULL,
   phone_number    VARCHAR(50) NOT NULL
 );
+
+
 
 CREATE TABLE branches (
   id              SERIAL PRIMARY KEY,
