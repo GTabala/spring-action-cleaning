@@ -67,6 +67,48 @@ router.get(
 );
 
 router.get(
+	"/workers/report/:start/:finish",
+	// checkAuth,
+	// checkPermission("get:workers/report"),
+	async (req, res, next) => {
+		const { start, finish } = req.params;
+
+		const client = await db.getClient();
+		try {
+			const { rows } = await client.query(
+				`SELECT j.id, j.visit_on, (j.end_time - j.start_time) duration, j.status, b.address, c.name
+				FROM jobs j
+				INNER JOIN branches b ON j.branch_id=b.id
+				INNER JOIN workers w ON w.id=j.worker_id
+				INNER JOIN customers c ON c.id=j.customer_id
+				WHERE w.email=$1 AND j.visit_on
+				BETWEEN $2 AND $3 AND j.status = 1
+				ORDER BY j.visit_on
+			`,
+				[req.user["https://springactioncleaning/email"], start, finish]
+			);
+			const totals = await client.query(
+				`SELECT SUM(j.end_time - j.start_time) duration
+			FROM jobs j INNER JOIN workers w ON w.id=j.worker_id
+			WHERE w.email=$1 AND j.visit_on
+				BETWEEN $2 AND $3
+				AND j.status = 1
+				GROUP BY (w.id)`,
+				[req.user["https://springactioncleaning/email"], start, finish]
+			);
+			return res.json({
+				generalData: rows,
+				generalTotals: totals,
+			});
+		} catch (e) {
+			next(e);
+		} finally {
+			client.release();
+		}
+	}
+);
+
+router.get(
 	"/workers/:id",
 	checkAuth,
 	checkPermission("get:workersById"),

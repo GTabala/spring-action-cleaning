@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Table } from "reactstrap";
+import { Button, Table, FormGroup } from "reactstrap";
 import useFetch from "../../hooks/useFetch";
 import Spinner from "../UI/Spinner";
 import WorkerJobsTableBody from "./WorkerJobsTableBody";
@@ -55,7 +55,9 @@ const WorkerJobsList = () => {
 		<div>
 			<div className="d-flex justify-content-between">
 				<DateFilter state={state} setState={setState} />
-				<WorkerHelpModal />
+				<FormGroup className="d-inline-block m-1">
+				<Button color="link" className="mr-3">Report</Button>
+				<WorkerHelpModal /></FormGroup>
 			</div>
 			{filteredDataByDate.length === 0 ? (
 				<div className="mt-5">No jobs found for the specified time.</div>
